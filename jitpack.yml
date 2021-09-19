@@ -1,0 +1,3 @@
+install:
+- export JAVA_HOME="/usr/lib/jvm/jdk-11"
+- export PATH="/usr/lib/jvm/jdk-11:$PATH"
