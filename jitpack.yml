@@ -1,3 +1,4 @@
 install:
-- export JAVA_HOME="/usr/lib/jvm/jdk-11"
-- export PATH="/usr/lib/jvm/jdk-11:$PATH"
+  - openjdk11
+#  - sdk install java 11.0.10-open
+#  - sdk use java 11.0.10-open
