@@ -15,3 +15,20 @@
 	        implementation 'com.github.cxping:SerialPort:Tag'
 	}
 ```
+### jdk 11
+```DSL
+compileOptions {
+sourceCompatibility JavaVersion.VERSION_11
+targetCompatibility JavaVersion.VERSION_11
+}
+
+    // For Kotlin projects
+    kotlinOptions {
+      jvmTarget = "11"
+    }
+
+```
+### 关于日志输出问题
+```Java
+    VLogUtil.isDebug= false；//修改此静态变量即可关闭日志输出
+```

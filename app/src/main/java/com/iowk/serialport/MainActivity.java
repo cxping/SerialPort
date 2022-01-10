@@ -20,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        serialPortOperator = new SerialPortOperator();
         MainActivity.this.serialPortOperator.spoName = "设备A";
         //第一步：初始化串口数据信息
         MainActivity.this.serialPortOperator.initSerialPort("/dev/ttyO2", 9600, 0);
