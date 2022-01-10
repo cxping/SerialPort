@@ -3,54 +3,55 @@ package com.iowk.serialport;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.iowk.iowkcore.common.VLogUtil;
+import com.iowk.iowkcore.def.DefaultPortListener;
+import com.iowk.iowkcore.def.IDataTransfer;
+import com.iowk.iowkcore.def.SerialPortException;
 import com.iowk.iowkcore.serialport.ISerialPortListener;
 import com.iowk.iowkcore.serialport.SerialPortOperator;
 import com.iowk.iowkcore.utils.StringUtil;
 import com.iowk.serialport.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = "MainActivity";
 
     private ActivityMainBinding binding;
-    private SerialPortOperator serialPortOperator;
+    //实现默认的串口监听
+    private DefaultPortListener defaultPortListener = new DefaultPortListener(new IDataTransfer() {
+        @Override
+        public void onReceive(byte[] data, int iArr) {
+
+        }
+
+        @Override
+        public void onError(String str) {
+
+        }
+
+        @Override
+        public void onSendData(byte[] bArr) {
+
+        }
+    }) {
+        @Override
+        public void onReceiveData(byte[] bArr, int i) {
+            super.onReceiveData(bArr, i);
+            VLogUtil.println("[onReceiveData]" + StringUtil.bytesToHexString(bArr, i));
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        serialPortOperator = new SerialPortOperator();
-        MainActivity.this.serialPortOperator.spoName = "设备A";
-        //第一步：初始化串口数据信息
-        MainActivity.this.serialPortOperator.initSerialPort("/dev/ttyO2", 9600, 0);
-        //第二步:设置数据监听
-        MainActivity.this.serialPortOperator.setListener(new OnSerialPortListener());
-        //第三步：打开串口
-//        MainActivity.this.serialPortOperator.openSerialPort();
-        //退出时关闭串口
-//        MainActivity.this.serialPortOperator.closeSerialPort();
-        //发送数据
-//        MainActivity.this.serialPortOperator.sendData(new byte[]{1, 2, 3, 4, 5});
-    }
-
-    private class OnSerialPortListener implements ISerialPortListener {
-        private OnSerialPortListener() {
-        }
-
-        @Override
-        public void onReceiveData(byte[] bArr, int i) {
-            VLogUtil.println("接收到的数据:" + StringUtil.bytesToHexString(bArr, i));
-        }
-
-        @Override
-        public void onSendData(byte[] bArr) {
-            VLogUtil.println("MainActivity 发送的数据:" + StringUtil.bytesToHexString(bArr, bArr.length));
-        }
-
-        @Override
-        public void onReceiveError(String str) {
-            VLogUtil.println("MainActivity 接收到的错误:" + str);
+        try {
+            defaultPortListener.initPort("SimplePort", "/dev/ttyS3", 115200, 0);
+            defaultPortListener.onStart();
+        } catch (SerialPortException e) {
+            e.printStackTrace();
         }
     }
 }
